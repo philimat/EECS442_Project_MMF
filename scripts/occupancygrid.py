@@ -59,8 +59,8 @@ class BEVOccupancyGrid(object):
         self.midsegments = [(self.segments[i][1:] + self.segments[i][:-1]) / 2 for i in range(3)]
         self.voxel_centers = cartesian(self.midsegments).astype(np.float32)
 
-        self.grid = np.zeros((self.x_y_z[1],self.x_y_z[0],self.x_y_z[2]))
-        self.grid[self.voxel_y,self.voxel_x,self.voxel_z] = 1
+        self.grid = np.zeros((self.x_y_z[1],self.x_y_z[0],self.x_y_z[2]), dtype=np.bool)
+        self.grid[self.voxel_y,self.voxel_x,self.voxel_z] = True
 
 def cartesian(arrays, out=None):
     """Generate a cartesian product of input arrays.
