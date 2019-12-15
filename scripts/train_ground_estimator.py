@@ -41,8 +41,7 @@ def test(testloader, net, criterion, device):
     '''
     Function for testing.
     '''
-    losses = 0.
-    cnt = 0
+    losses = []
     with torch.no_grad():
         net = net.eval()
         for images, labels in tqdm(testloader):
@@ -51,10 +50,9 @@ def test(testloader, net, criterion, device):
             output = net(images)
             point_mask = torch.sum(images,axis=1,keepdim=True).type(torch.BoolTensor)
             loss = criterion(output[point_mask], labels[point_mask])
-            losses += loss.item()
-            cnt += 1
-    print(losses / cnt)
-    return (losses/cnt)
+            losses.append(loss.item())
+    print(np.mean(np.array(losses)))
+    return (np.array(losses))
 
 # TODO change data_range to include all train/evaluation/test data.
 # TODO adjust batch_size.

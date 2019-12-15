@@ -101,6 +101,7 @@ if __name__ == '__main__':
             # plt.title('Ground Estimation Depth')
             # plt.show()
             # plt.close()
+            
             # sum up the BEV occupancy grid along the channels to see what it looks like from above
             bev_img = np.sum(grid.grid,axis=2)
             cmap = cm.get_cmap("jet")
