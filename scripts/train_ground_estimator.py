@@ -69,7 +69,12 @@ test_loader = DataLoader(test_data, batch_size=batch_size)
 
 name = 'ground_estimation_net_v2'
 net = Unet(32,1,5,32,concat=False)
-reuse_weights = False
+use_multi_GPU = True
+if use_multi_GPU:
+    if torch.cuda.device_count() > 1:
+        print("Let's use", torch.cuda.device_count(), "GPUs!")
+        net = nn.DataParallel(net)
+reuse_weights = True
 if reuse_weights:
     net.load_state_dict(torch.load('./models/model_{}.pth'.format(name)))
     try:
@@ -80,16 +85,10 @@ if reuse_weights:
 else:
     best_val_loss = np.finfo(np.float64).max
 
-use_multi_GPU = True
-if use_multi_GPU:
-    if torch.cuda.device_count() > 1:
-        print("Let's use", torch.cuda.device_count(), "GPUs!")
-        net = nn.DataParallel(net)
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 net.to(device)
 criterion = nn.MSELoss()
-optimizer = torch.optim.Adam(net.parameters(), lr=1e-3, weight_decay=1e-4)
+optimizer = torch.optim.Adam(net.parameters(), lr=5e-4, weight_decay=1e-4)
 
 best_weights = net.state_dict()
 num_epochs = 5
